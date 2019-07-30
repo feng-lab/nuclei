@@ -1,6 +1,7 @@
 # Code for paper ["Robust Nucleus Detection from Microscopical Image with Partially Labeled Exemplars"](https://arxiv.org/abs/1907.09738)
 
 Adapted from [maskrcnn-benchmark](https://github.com/facebookresearch/maskrcnn-benchmark), see `./configs/nuclei` for experiment configurations.
+Datasets used in this paper can be found in [dropbox folder](https://www.dropbox.com/sh/2cgeu79o74stx6z/AABXRmbZFgclUCSLUTSjDLPZa?dl=0).
 
 # Faster R-CNN and Mask R-CNN in PyTorch 1.0
 
