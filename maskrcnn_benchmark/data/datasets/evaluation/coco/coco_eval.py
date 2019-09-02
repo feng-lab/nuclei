@@ -117,9 +117,9 @@ def prepare_for_coco_segmentation(predictions, dataset):
         scores = prediction.get_field("scores")
         keep = torch.nonzero(scores > 0.5).squeeze(1)
         prediction = prediction[keep]
-        # scores = prediction.get_field("scores")
-        # _, idx = scores.sort(0, descending=False)
-        # prediction = prediction[idx]
+        scores = prediction.get_field("scores")
+        _, idx = scores.sort(0, descending=False)
+        prediction = prediction[idx]
 
         img_info = dataset.get_img_info(image_id)
         image_width = img_info["width"]
@@ -134,27 +134,30 @@ def prepare_for_coco_segmentation(predictions, dataset):
         # logger.info('Time mask: {}'.format(time.time() - t))
         # prediction = prediction.convert('xywh')
 
-        mask = np.squeeze(np.array(masks), axis=1).transpose((1, 2, 0)) > 0
-        for i in range(mask.shape[2]):
-            mask[:,:,i] = scipy.ndimage.binary_dilation(mask[:,:,i])
-        areas = np.sum(mask, axis=(0, 1))  ## Use size of nucleus as score...
-        scores = np.array(prediction.get_field("scores"))
-        order = np.argsort(scores)[::-1] + 1  # 1-based descending
-        flat_mask = np.max(mask * np.reshape(order, [1, 1, -1]), -1)
-        for i in np.arange(len(order)):
-            mask[:, :, i] = mask[:, :, i] * (flat_mask == order[i])
-        new_areas = np.sum(mask, axis=(0, 1))
-        diff_pix = areas - new_areas
-        diff_pix[areas == 0] = 1
-        areas[areas == 0] = 1
-        # print(mask.shape, areas.shape, new_areas.shape, diff_pix.shape)
-        reduccion = diff_pix / areas
-        mask_valid = reduccion <= 0.7
-        # print(reduccion, mask_valid)
+        if len(prediction) >= 2:
+            mask = np.squeeze(np.array(masks), axis=1) > 0
+            for i in range(mask.shape[0]):
+                mask[i, :, :] = scipy.ndimage.binary_dilation(mask[i, :, :])
+            areas = np.sum(mask, axis=(1, 2))  ## Use size of nucleus as score...
+            order = np.arange(start=mask.shape[0], stop=0, step=-1)  # 1-based descending
+            flat_mask = np.max(mask * np.reshape(order, [-1, 1, 1]), axis=0)
+            for i in range(mask.shape[0]):
+                mask[i, :, :] = mask[i, :, :] * (flat_mask == order[i])
+            new_areas = np.sum(mask, axis=(1, 2))
+            diff_pix = areas - new_areas
+            diff_pix[areas == 0] = 1
+            areas[areas == 0] = 1
+            # print(mask.shape, areas.shape, new_areas.shape, diff_pix.shape)
+            reduccion = diff_pix / areas
+            mask_valid = reduccion <= 0.7
 
-        masks = mask[:, :, mask_valid].transpose((2, 0, 1))
-        scores = np.array(prediction.get_field("scores"))[mask_valid]
-        labels = np.array(prediction.get_field("labels"))[mask_valid]
+            masks = mask[mask_valid, :, :]
+            scores = np.array(prediction.get_field("scores"))[mask_valid]
+            labels = np.array(prediction.get_field("labels"))[mask_valid]
+        else:
+            masks = np.squeeze(np.array(masks), axis=1) > 0
+            scores = np.array(prediction.get_field("scores"))
+            labels = np.array(prediction.get_field("labels"))
 
         # boxes = prediction.bbox.tolist()
         # scores = prediction.get_field("scores").tolist()
