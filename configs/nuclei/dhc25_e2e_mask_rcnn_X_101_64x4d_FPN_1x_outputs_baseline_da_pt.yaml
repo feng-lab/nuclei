@@ -21,7 +21,6 @@ MODEL:
     FPN_POST_NMS_TOP_N_TEST: 2000
     FPN_POST_NMS_PER_BATCH: False
     PRED_TARGETS: True
-    WARMUP_PRED_TARGETS: 500
   ROI_HEADS:
     USE_FPN: True
     DETECTIONS_PER_IMG: 1000
@@ -45,8 +44,8 @@ MODEL:
   FPN:
     USE_DA: True
 DATASETS:
-  TRAIN: ("DH25_2019_train_cocostyle",)
-  TEST: ("DH25_2019_test_cocostyle",)
+  TRAIN: ("DHc25_2019_train_cocostyle",)
+  TEST: ("DHc25_2019_test_cocostyle",)
 DATALOADER:
   SIZE_DIVISIBILITY: 32
   NUM_WORKERS: 8
@@ -54,14 +53,15 @@ SOLVER:
   BASE_LR: 0.01
   WEIGHT_DECAY: 0.0001
   # epoch 30 50 75 so 1800, 3000, 4500
-  STEPS: (4000,)
-  MAX_ITER: 4000
+  STEPS: (1000,)
+  MAX_ITER: 1000
   IMS_PER_BATCH: 8
-  CHECKPOINT_PERIOD: 100
-OUTPUT_DIR: "/media/fs3017/eeum/nuclei/outputs/outputs_DH25_baseline_da_pt_warmup"
+  CHECKPOINT_PERIOD: 50
+# OUTPUT_DIR: "/media/fs3017/eeum/nuclei/outputs/outputs_DHc25_baseline_aug"
+OUTPUT_DIR: "/home/feng/data/outputs/outputs_DHc25_baseline_da_pt"
 INPUT:
-  MIN_SIZE_TRAIN: (360,)
-  MIN_SIZE_TEST: 360
+  MIN_SIZE_TRAIN: (180,)
+  MIN_SIZE_TEST: 180
   VERTICAL_FLIP_PROB_TRAIN: 0.5
   PIXEL_MEAN: [48.22, 39.56, 43.53]
   AUG: False

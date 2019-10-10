@@ -64,6 +64,8 @@ def main():
 
     save_dir = cfg.OUTPUT_DIR  # ""
     filename = f'test_log_{pathlib.PurePath(args.ckpt) if args.ckpt is not None else "last"}.txt'
+    test_result_filename = os.path.join(save_dir,
+                                        pathlib.PurePath(filename).stem + '.pickle')
     logger = setup_logger("maskrcnn_benchmark", save_dir, get_rank(), filename=filename)
     logger.info("Using {} GPUs".format(num_gpus))
     logger.info(cfg)
@@ -83,7 +85,7 @@ def main():
     ckpt = cfg.MODEL.WEIGHT if args.ckpt is None else os.path.join(save_dir, args.ckpt)
     _ = checkpointer.load(ckpt, use_latest=args.ckpt is None)
 
-    iou_types = ("bbox",)
+    iou_types = ()
     if cfg.MODEL.MASK_ON:
         iou_types = iou_types + ("segm",)
     if cfg.MODEL.KEYPOINT_ON:
@@ -107,6 +109,7 @@ def main():
             expected_results=cfg.TEST.EXPECTED_RESULTS,
             expected_results_sigma_tol=cfg.TEST.EXPECTED_RESULTS_SIGMA_TOL,
             output_folder=output_folder,
+            test_result_filename=test_result_filename,
         )
         synchronize()
 

@@ -42,7 +42,7 @@ class RPNLossComputation(object):
         self.copied_fields = ["is_crowd"]
         self.generate_labels_func = generate_labels_func
         self.discard_cases = ['not_visibility', 'between_thresholds', 'crowd']
-        self.center_sampler = BalancedPositiveNegativeSampler(512, 0.5)
+        self.center_sampler = BalancedPositiveNegativeSampler(128, 0.5)
 
         self.pred_targets_as_true = pred_targets_as_true
 
@@ -131,14 +131,14 @@ class RPNLossComputation(object):
                  pred_targets, centerness, rpn_center_box_regression, centerness_pack):
         """
         Arguments:
-            anchors (list[BoxList])
+            anchors (list[list[BoxList]])
             objectness (list[Tensor])
             box_regression (list[Tensor])
             targets (list[BoxList])
 
         Returns:
             objectness_loss (Tensor)
-            box_loss (Tensor
+            box_loss (Tensor)
         """
         centerness_loss = None
         rpn_center_box_loss = None

@@ -72,10 +72,20 @@ def boxlist_iou(boxlist1, boxlist2):
     N = len(boxlist1)
     M = len(boxlist2)
 
+    print(N, M)
+    use_cpu = M > 260000 and N > 800
+
     area1 = boxlist1.area()
     area2 = boxlist2.area()
 
     box1, box2 = boxlist1.bbox, boxlist2.bbox
+
+    if use_cpu:
+        device = box1.device
+        box1 = box1.cpu()
+        box2 = box2.cpu()
+        area1 = area1.cpu()
+        area2 = area2.cpu()
 
     lt = torch.max(box1[:, None, :2], box2[:, :2])  # [N,M,2]
     rb = torch.min(box1[:, None, 2:], box2[:, 2:])  # [N,M,2]
@@ -86,6 +96,10 @@ def boxlist_iou(boxlist1, boxlist2):
     inter = wh[:, :, 0] * wh[:, :, 1]  # [N,M]
 
     iou = inter / (area1[:, None] + area2 - inter)
+
+    if use_cpu:
+        iou = iou.to(device)
+
     return iou
 
 

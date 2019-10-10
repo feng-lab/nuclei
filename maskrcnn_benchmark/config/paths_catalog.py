@@ -226,6 +226,19 @@ class DatasetCatalog(object):
             "ann_file": "DH25/annotations/instances_test2019.json",
         },
 
+        "DHc25_2019_train_cocostyle": {
+            "img_dir": "DHc25/train2019",
+            "ann_file": "DHc25/annotations/instances_train2019.json",
+        },
+        "DHc25_2019_val_cocostyle": {
+            "img_dir": "DHc25/val2019",
+            "ann_file": "DHc25/annotations/instances_val2019.json",
+        },
+        "DHc25_2019_test_cocostyle": {
+            "img_dir": "DHc25/test2019",
+            "ann_file": "DHc25/annotations/instances_test2019.json",
+        },
+
         "PV100_2019_train_cocostyle": {
             "img_dir": "PV100/train2019",
             "ann_file": "PV100/annotations/instances_train2019.json",
@@ -284,6 +297,24 @@ class DatasetCatalog(object):
         "TNBC25s_2019_test_cocostyle": {
             "img_dir": "TNBC25_s/test2019",
             "ann_file": "TNBC25_s/annotations/instances_test2019.json",
+        },
+
+        "Lemur_2019_train_cocostyle": {
+            "img_dir": "anno0_coco/train2019",
+            "ann_file": "anno0_coco/annotations/instances_train2019.json",
+        },
+        "Lemur_2019_val_cocostyle": {
+            "img_dir": "anno0_coco/val2019",
+            "ann_file": "anno0_coco/annotations/instances_val2019.json",
+        },
+
+        "DS225_2019_train_cocostyle": {
+            "img_dir": "DS225/train2019",
+            "ann_file": "DS225/annotations/instances_train2019.json",
+        },
+        "DS225_2019_test_cocostyle": {
+            "img_dir": "DS225/test2019",
+            "ann_file": "DS225/annotations/instances_test2019.json",
         },
     }
 

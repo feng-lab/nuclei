@@ -188,7 +188,11 @@ class COCODataset(torchvision.datasets.coco.CocoDetection):
                 is_crowd = torch.as_tensor(is_crowd)
                 target.add_field("is_crowd", is_crowd)
 
-                non_crowd_masks = masks[:, :, np.array([obj["iscrowd"] for obj in anno])[_idx]]
+                # print(masks.shape)
+                # print(np.array([obj["iscrowd"] == 0 for obj in anno])[_idx])
+                non_crowd_masks = masks[:, :, np.array([obj["iscrowd"] == 0 for obj in anno])[_idx]]
+                if non_crowd_masks.size == 0:
+                    non_crowd_masks = np.zeros(shape=(masks.shape[0], masks.shape[1], 1))
                 centerness = scipy.ndimage.zoom(non_crowd_masks.max(axis=2), zoom=[0.25, 0.25], order=0)
                 centerness = (centerness > 0).astype(np.float32)
                 centerness[centerness == 0] = -1.

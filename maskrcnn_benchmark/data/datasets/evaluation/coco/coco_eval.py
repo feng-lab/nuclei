@@ -9,6 +9,7 @@ import scipy.ndimage
 from maskrcnn_benchmark.modeling.roi_heads.mask_head.inference import Masker
 from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.structures.boxlist_ops import boxlist_iou
+from maskrcnn_benchmark.utils.miscellaneous import save_object
 
 
 def do_coco_evaluation(
@@ -19,6 +20,7 @@ def do_coco_evaluation(
     iou_types,
     expected_results,
     expected_results_sigma_tol,
+    test_result_filename,
 ):
     logger = logging.getLogger("maskrcnn_benchmark.inference")
 
@@ -62,6 +64,8 @@ def do_coco_evaluation(
             )
             results.update(res)
     logger.info(results)
+    if test_result_filename is not None:
+        save_object(results, test_result_filename)
     check_expected_results(results, expected_results, expected_results_sigma_tol)
     if output_folder:
         torch.save(results, os.path.join(output_folder, "coco_results.pth"))
@@ -399,7 +403,8 @@ class COCOResults(object):
     COCO_AR80 = 28
     COCO_AR90 = 29
 
-    COCO_ACS = 30
+    COCO_AJI = 30
+    COCO_ACS = 31
 
     METRICS = {
         "bbox": ["AP", "AP50", "AP75", "APs", "APm", "APl",
@@ -407,14 +412,14 @@ class COCOResults(object):
                  'nAP', 'nAP50', 'nAP60', 'nAP70', 'nAP80', 'nAP90',
                  'fAP', 'fAP50', 'fAP60', 'fAP70', 'fAP80', 'fAP90',
                  'AR', 'AR50', 'AR60', 'AR70', 'AR80', 'AR90',
-                 'ACS', 'ACS2'
+                 'AJI', 'ACS'
                  ],
         "segm": ["AP", "AP50", "AP75", "APs", "APm", "APl",
                  'AR1', 'AR10', 'AR100', 'ARs', 'ARm', 'ARl',
                  'nAP', 'nAP50', 'nAP60', 'nAP70', 'nAP80', 'nAP90',
                  'fAP', 'fAP50', 'fAP60', 'fAP70', 'fAP80', 'fAP90',
                  'AR', 'AR50', 'AR60', 'AR70', 'AR80', 'AR90',
-                 'ACS', 'ACS2'
+                 'AJI', 'ACS'
                  ],
         "box_proposal": [
             "AR@100",
