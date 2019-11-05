@@ -10,6 +10,7 @@ import numpy as np
 import skimage.transform
 import scipy.ndimage
 import cv2
+import sys
 import random
 from PIL import Image
 import warnings
@@ -254,7 +255,7 @@ class COCODataset(torchvision.datasets.coco.CocoDetection):
                 classes = torch.tensor(classes)
                 target.add_field("labels", classes)
 
-                is_crowd = [obj["iscrowd"] for obj in anno]
+                is_crowd = [obj["iscrowd"] > 0 for obj in anno]
                 is_crowd = torch.as_tensor(is_crowd)
                 target.add_field("is_crowd", is_crowd)
 

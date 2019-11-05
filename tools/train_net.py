@@ -167,7 +167,6 @@ def train(cfg, local_rank, distributed):
         test_period,
         arguments,
         use_amp,
-        cfg,
         per_iter_end_callback_fn=per_iter_callback_fn,
     )
 
@@ -198,6 +197,7 @@ def run_test(cfg, model, distributed):
             dataset_name=dataset_name,
             iou_types=iou_types,
             box_only=False if cfg.MODEL.RETINANET_ON else cfg.MODEL.RPN_ONLY,
+            bbox_aug=cfg.TEST.BBOX_AUG.ENABLED,
             device=cfg.MODEL.DEVICE,
             expected_results=cfg.TEST.EXPECTED_RESULTS,
             expected_results_sigma_tol=cfg.TEST.EXPECTED_RESULTS_SIGMA_TOL,

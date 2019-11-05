@@ -95,7 +95,7 @@ class ResNet(nn.Module):
         # Construct the stem module
         self.stem = stem_module(cfg)
 
-        self.use_da = cfg.MODEL.FPN.USE_DA,
+        self.use_da = cfg.MODEL.FPN.USE_DA
 
         # Constuct the specified ResNet stages
         num_groups = cfg.MODEL.RESNETS.NUM_GROUPS

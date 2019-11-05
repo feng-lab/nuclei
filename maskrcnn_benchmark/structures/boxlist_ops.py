@@ -72,7 +72,7 @@ def boxlist_iou(boxlist1, boxlist2):
     N = len(boxlist1)
     M = len(boxlist2)
 
-    print(N, M)
+    # print(N, M)
     use_cpu = M > 260000 and N > 800
 
     area1 = boxlist1.area()
